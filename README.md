@@ -15,7 +15,7 @@ The following software products are required:
 Start by setting up the project locally:
 
 - Open the project `./shared/mll` in Eclipse.
-- Configure build path:
+- Configure build path (this might have worked automatically):
     - Add every `.jar` file in the directory `lib` to classpath.
     - Add `graphviz-java` as module.
     - Add `xchart` as module.
