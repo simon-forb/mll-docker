@@ -164,8 +164,9 @@ public abstract class Op {
      * Writes a DOT-String to disk (as DOT-file).
      */
     public final void dotToFile(String file) throws IOException {
-    	BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-    	dot(writer);
+    	try (var writer = new BufferedWriter(new FileWriter(file))) {
+    		dot(writer);
+    	}
     }
     
     /**
@@ -215,17 +216,14 @@ public abstract class Op {
 	}
     
     public final String llvmToFile(String filename) throws IOException {
-    	
     	Files.createDirectories(Paths.get("llvm"));
     	
     	String filepath = Paths.get("llvm", filename + ".ll").toString();
     	
-    	BufferedWriter writer = new BufferedWriter(
-    			new FileWriter(filepath)
-    			);
-    	llvm(writer);
-    	writer.close();
-    	
+    	try(var writer = new BufferedWriter(new FileWriter(filepath))) {
+    		llvm(writer);
+    	}
+    	    	
     	return filepath;
     }
 
