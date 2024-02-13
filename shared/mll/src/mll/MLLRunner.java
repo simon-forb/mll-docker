@@ -19,40 +19,62 @@ import java.nio.file.Paths;
 public class MLLRunner {
 
 	/**
+	 * Runs the provided LLVM program.
+	 */
+	public static void runLLVM(String filename) {
+		runLLVM(filename, false);
+	}
+	
+	/**
+	 * Runs the provided LLVM program.
+	 */
+	public static void runLLVM(String filename, boolean insideJupyter) {
+		
+		String[] command;
+		if (insideJupyter) {
+			command = new String[]{"lli", "/home/jovyan/llvm/" + filename + ".ll"};
+		} else {
+			command = new String[]{"docker","exec", "-t", "mll_docker", "lli", "/home/jovyan/mll/llvm/" + filename + ".ll"};
+		}
+
+	    runCommand(command);
+	}
+	
+	/**
 	 * Converts an {@link Op} into a DOT-Graph as PNG.
 	 */
-    public static void saveDot(Op op, String filename) throws IOException {
+    public static String saveDot(Op op, String filename) throws IOException {
     	String dotString = op.dotToString();
     	
     	Files.createDirectories(Paths.get("dot"));
     	
-		getGraphRenderer(dotString).toFile(new File(Paths.get("dot", filename + ".png").toString()));   	
+    	String filepath = Paths.get("dot", filename + ".png").toString();
+    	
+		getGraphRenderer(dotString).toFile(new File(filepath));
+		
+		return filepath;
     }
     
     
    /**
-    * Shows a graph based on the given {@link Op} in a Jupyter-Notebook. 
-    */
-    public static BufferedImage viewDot(Op op) throws IOException {
-    	String dotString = op.dotToString();
-    	return getGraphRenderer(dotString).toImage();
-    }
-
-
-    /**
      * Stores a single function plot on disk.
      */
-    public static void saveFunctionPlot(float[] x, float[] y, String plotName) {
+    public static String saveFunctionPlot(float[] x, float[] y, String plotName) {
         try {
             XYChart chart = getChart(x, y, plotName);
             
             Files.createDirectories(Paths.get("plots"));
             
+            String filepath = Paths.get("plots", plotName + ".png").toString(); 
+            
             BitmapEncoder.saveBitmapWithDPI(
             		chart, 
-            		Paths.get("plots", plotName + ".png").toString(), 
+            		filepath, 
             		BitmapEncoder.BitmapFormat.PNG, 300
             		);
+            
+            return filepath;
+            
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -61,36 +83,51 @@ public class MLLRunner {
     /**
      * Stores a plot with two functions on disk.
      */
-    public static void saveFunctionPlot(float[] x, float[] y1, float[] y2, String plotName) {
+    public static String saveFunctionPlot(float[] x, float[] y1, float[] y2, String plotName) {
         try {
             XYChart chart = getDoubleChart(x, y1, y2, plotName);
             
             Files.createDirectories(Paths.get("plots"));
             
+            String filepath = Paths.get("plots", plotName + ".png").toString(); 
+ 
+            
             BitmapEncoder.saveBitmapWithDPI(
-            		chart, 
-            		Paths.get("plots", plotName + ".png").toString(), 
+            		chart,
+            		filepath,
             		BitmapEncoder.BitmapFormat.PNG, 300
             		);
+            
+            return filepath;
+            
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     
     /**
+     * Stores an LLVM program on disk. 
+     */
+    public static String saveLLVM(Op op, String filename) throws IOException {
+    	return op.llvmToFile(filename);
+    }
+    
+    /**
 	 * Executes LLVM optimization and saves output to disk.
 	 */
-	public static void saveOpt(String filename, int optLevel) throws IOException {
-		saveOpt(filename, optLevel, false);
+	public static String saveOpt(String filename, int optLevel) throws IOException {
+		return saveOpt(filename, optLevel, false);
 	}
 	
 
     /**
 	 * Executes LLVM optimization and saves output to disk.
 	 */
-	public static void saveOpt(String filename, int optLevel, boolean insideJupyter) throws IOException {
+	public static String saveOpt(String filename, int optLevel, boolean insideJupyter) throws IOException {
 	
 		Files.createDirectories(Paths.get("llvm"));
+		
+		String filepath = Paths.get("llvm", filename + getOptLevelCode(optLevel) + ".png").toString();
 		
 		String[] command;
 		if (insideJupyter) {
@@ -105,8 +142,18 @@ public class MLLRunner {
 
 	    runCommand(command);
 	    
+	    return filepath;
 	}
 	
+	/**
+	* Shows a graph based on the given {@link Op} in a Jupyter-Notebook. 
+	*/
+	public static BufferedImage viewDot(Op op) throws IOException {
+		String dotString = op.dotToString();
+		return getGraphRenderer(dotString).toImage();
+	}
+
+
 	/**
 	 * Displays plot of a single function in a Jupyter-Notebook.
 	 */

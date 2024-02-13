@@ -27,13 +27,16 @@ public class Main {
         }
         
         // Save function plot to disk
-        MLLRunner.saveFunctionPlot(xValues, yValues, "plot");
+        String plot = MLLRunner.saveFunctionPlot(xValues, yValues, "plot");
 
         // Save LLVM to disk
-        add.llvmToFile("program");
+        String llvm = MLLRunner.saveLLVM(add, "program");
                 
         // Save optimized LLVM to disk
-        MLLRunner.saveOpt("program", 1);
+        String opt = MLLRunner.saveOpt("program", 1);
+        
+        // Run LLVM
+        MLLRunner.runLLVM("program");
                 
 	}
 	

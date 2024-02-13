@@ -214,15 +214,19 @@ public abstract class Op {
 		return writer.toString();
 	}
     
-    public final void llvmToFile(String filename) throws IOException {
+    public final String llvmToFile(String filename) throws IOException {
     	
     	Files.createDirectories(Paths.get("llvm"));
     	
+    	String filepath = Paths.get("llvm", filename + ".ll").toString();
+    	
     	BufferedWriter writer = new BufferedWriter(
-    			new FileWriter(Paths.get("llvm", filename + ".ll").toString())
+    			new FileWriter(filepath)
     			);
     	llvm(writer);
     	writer.close();
+    	
+    	return filepath;
     }
 
 	/*
