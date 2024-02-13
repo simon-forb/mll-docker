@@ -12,24 +12,21 @@ The following software products are required:
 
 ## Instructions
 
-Start by setting up the project locally:
-
-- Open the project `./shared/mll` in Eclipse.
-- Configure build path (this might have worked automatically):
-    - Add every `.jar` file in the directory `lib` to classpath.
-    - Add `graphviz-java` as module.
-    - Add `xchart` as module.
-- At this point, Eclipse should be able to build and run the project.
-
-Now add the Docker features:
-
 - In any shell, change the working directory to the root of this repository.
-- Execute `docker-compose up -d`. The first run might require some time (~ 15 min). Subsequent runs will be much faster.
+- Execute `docker-compose up -d`. The first run might require some time. Subsequent runs will be much faster.
+- Open the directory `shared/mll` in Eclipse as a project.
+- Run the code once to generate `.class` files.
+- Open the website `localhost:8888` in your browser. If required, provide the password `ml`.
+
+At this point you should be able to edit code locally in Eclipse and remotely through a Jupyter Notebook
+in your browser.
 
 Run `docker-compose down` to stop the docker container when finished with working on this project.
 
-
 ## Notes
 
-- Code from the package `mll` will be available in a Jupyter Notebook **once it is compiled to .class files and stored in the** `shared/mll/bin` **directory.** The package needs to be imported using `import mll.*` in any Jupyter Notebook.
+- Code from the package `mll` will be available in a Jupyter Notebook **once it
+  is compiled to .class files and stored in the** `shared/mll/bin`
+  **directory.** The package needs to be imported using `import mll.*` in any
+  Jupyter Notebook.
 - Any change to these `.class` files requires a kernel restart.

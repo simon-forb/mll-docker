@@ -1,9 +1,7 @@
 shared/mll/bin
 shared/mll/dot
-shared/mll/llvm
 shared/mll/plots
 shared/dot
-shared/llvm
 shared/plots
 
 shared/.bash_history
@@ -13,3 +11,5 @@ shared/.java/
 shared/.jupyter/
 shared/.local/
 
+*.ll
+!helloworld.ll
