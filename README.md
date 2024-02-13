@@ -17,6 +17,7 @@ The following software products are required:
 - Open the directory `shared/mll` in Eclipse as a project.
 - Run the code once to generate `.class` files.
 - Open the website `localhost:8888` in your browser. If required, provide the password `ml`.
+- Run the notebook `HelloWorld`.
 
 At this point you should be able to edit code locally in Eclipse and remotely through a Jupyter Notebook
 in your browser.
