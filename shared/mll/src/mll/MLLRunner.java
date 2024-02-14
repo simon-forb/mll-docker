@@ -18,20 +18,14 @@ import java.nio.file.Paths;
 
 public class MLLRunner {
 
-	/**
-	 * Runs the provided LLVM program.
-	 */
-	public static void runLLVM(String filename) {
-		runLLVM(filename, false);
-	}
 	
 	/**
 	 * Runs the provided LLVM program.
 	 */
-	public static void runLLVM(String filename, boolean insideJupyter) {
+	public static void runLLVM(String filename) {
 		
 		String[] command;
-		if (insideJupyter) {
+		if (isLLVMAvailable()) {
 			command = new String[]{"lli", "/home/jovyan/llvm/" + filename + ".ll"};
 		} else {
 			command = new String[]{"docker","exec", "-t", "mll_docker", "lli", "/home/jovyan/mll/llvm/" + filename + ".ll"};
@@ -116,21 +110,13 @@ public class MLLRunner {
 	 * Executes LLVM optimization and saves output to disk.
 	 */
 	public static String saveOpt(String filename, int optLevel) throws IOException {
-		return saveOpt(filename, optLevel, false);
-	}
-	
-
-    /**
-	 * Executes LLVM optimization and saves output to disk.
-	 */
-	public static String saveOpt(String filename, int optLevel, boolean insideJupyter) throws IOException {
 	
 		Files.createDirectories(Paths.get("llvm"));
 		
-		String filepath = Paths.get("llvm", filename + getOptLevelCode(optLevel) + ".png").toString();
+		String filepath = Paths.get("llvm", filename + getOptLevelCode(optLevel) + ".ll").toString();
 		
 		String[] command;
-		if (insideJupyter) {
+		if (isLLVMAvailable()) {
 			command = new String[]{"opt", getOptLevelCode(optLevel), 
 		    		"/home/jovyan/llvm/" + filename + ".ll", "-So", 
 		    		"/home/jovyan/llvm/" + (filename + getOptLevelCode(optLevel) + ".ll")};
@@ -249,6 +235,22 @@ public class MLLRunner {
 	        default -> "-O3";
 	    };
 	}
+    
+    private static boolean isLLVMAvailable() {
+    	try {
+			var process = new ProcessBuilder("clang", "--version").start();
+			int exitCode = process.waitFor();
+			
+			if (exitCode == 0) {
+				return true;
+			}
+			
+			return false;
+
+    	} catch (IOException | InterruptedException e) {
+			return false;
+    	}
+    }
 
 
     private static void runCommand(String[] command) {
