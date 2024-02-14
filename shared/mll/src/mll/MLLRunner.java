@@ -167,22 +167,15 @@ public class MLLRunner {
     }
 
     /**
-     * Prints the optimized LLVM program to Std-Out.
-     */
-    public static void viewOpt(Op op, int optLevel) throws IOException {
-    	viewOpt(op, optLevel, false);
-    }
-    
-    /**
      * Prints the given LLVM program to Std-Out.
      */
-    public static void viewOpt(Op op, int optLevel, boolean insideJupyter) throws IOException {
+    public static void viewOpt(Op op, int optLevel) throws IOException {
     	
     	String filename = "__tmp";
     	op.llvmToFile("__tmp");
     	
     	String[] command;
-    	if (insideJupyter) {
+    	if (isLLVMAvailable()) {
             command = new String[]{"opt", getOptLevelCode(optLevel), 
             		"/home/jovyan/llvm/" + filename + ".ll", "-So", "-"};
     	} else {
