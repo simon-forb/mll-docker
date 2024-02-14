@@ -11,8 +11,10 @@ import org.knowm.xchart.XYChart;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -252,20 +254,29 @@ public class MLLRunner {
     	}
     }
 
+    private static void printInputStream(InputStream inputStream) throws IOException {
+		try (
+			var isr = new InputStreamReader(inputStream);
+			var reader = new BufferedReader(isr);
+		) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+			}
+		}
+	}
 
-    private static void runCommand(String[] command) {
+
+	private static void runCommand(String[] command) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             Process process = processBuilder.start();
-
-            InputStream inputStream = process.getInputStream();
-
-            int character;
-            while ((character = inputStream.read()) != -1) {
-                System.out.print((char) character);
-            }
-            inputStream.close();
-
+            var inputStream = process.getInputStream();
+            var errorStream = process.getErrorStream();
+            
+			printInputStream(inputStream);
+			printInputStream(errorStream);
+            
             int exitCode = process.waitFor();
 
             if (exitCode != 0) {
