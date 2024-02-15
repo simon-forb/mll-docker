@@ -13,7 +13,7 @@ The following software products are required:
 
 ## Instructions
 
-Install the software packages above. Then perform the following steps. Please let us know if you cannot confirm the
+Install the software packages above. Then perform the following steps. **Please let us know** if you cannot confirm the
 bullet points marked with **Please Confirm**.
 
 - Download this repository to your computer.
@@ -34,7 +34,8 @@ bullet points marked with **Please Confirm**.
     as mentioned in the output above (i.e., a plot in the `plots` directory, a graph in the `dot` directory and an (optimized) LLVM
     program in the `llvm` directory with the name `helloworld-O3.ll`.
 - [Open the website](http://localhost:8888/lab/tree/HelloWorld.ipynb) `localhost:8888` in your browser. If required, provide the password `ml`.
-- Run the notebook `HelloWorld` located at the root of the file tree on the left-hand side.
+- Run the notebook `HelloWorld` located at the root of the file tree on the left-hand side. You can also alter some values, e.g., change the
+  graph or the function.
   - **Please Confirm III:** There should be no errors. You should see a function plot and a graph below the respective cells. There should
     be an (optimized) LLVM program in the directory `llvm` with the name `helloworld-O3.ll`.
 
